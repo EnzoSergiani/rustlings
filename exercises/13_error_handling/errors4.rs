@@ -1,3 +1,5 @@
+use std::{collections::btree_map::Values, f32::MIN};
+
 #[derive(PartialEq, Debug)]
 enum CreationError {
     Negative,
@@ -10,7 +12,11 @@ struct PositiveNonzeroInteger(u64);
 impl PositiveNonzeroInteger {
     fn new(value: i64) -> Result<Self, CreationError> {
         // TODO: This function shouldn't always return an `Ok`.
-        Ok(Self(value as u64))
+        match value {
+            std::i64::MIN..=-1 => Err(CreationError::Negative),
+            0 => Err(CreationError::Zero),
+            _ => Ok(PositiveNonzeroInteger(value as u64)),      
+        }
     }
 }
 
